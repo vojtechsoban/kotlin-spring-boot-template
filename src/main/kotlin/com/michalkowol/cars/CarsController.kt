@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 @RestController
 @EnableAutoConfiguration
-@RequestMapping(path = arrayOf("/cars"), produces = arrayOf("application/json"))
+@RequestMapping(path = ["/cars"], produces = ["application/json"])
 class CarsController @Inject constructor(private val carsRepository: CarsRepository) {
 
     @RequestMapping
@@ -21,12 +21,12 @@ class CarsController @Inject constructor(private val carsRepository: CarsReposit
 
     @RequestMapping("/{id}")
     fun carById(@PathVariable id: Int): Car {
-        val carEntity = carsRepository.findOne(id).orElseThrow { NotFoundException("Car with id=$id not found") }
+        val carEntity = carsRepository.findById(id).orElseThrow { NotFoundException("Car with id=$id not found") }
         val car = Car(carEntity.id, carEntity.name)
         return car
     }
 
-    @RequestMapping(method = arrayOf(POST))
+    @RequestMapping(method = [POST])
     @ResponseStatus(CREATED)
     fun createCar(@RequestBody car: Car): Car {
         val carEntity = CarEntity.create(car.id, car.name)
@@ -38,27 +38,28 @@ class CarsController @Inject constructor(private val carsRepository: CarsReposit
     @ResponseStatus(CREATED)
     fun createCarWithQueryParams(@RequestParam id: Int, @RequestParam name: String): Car {
         // not RESTfull - only for demo
+        println("vojta xx")
         val carEntity = CarEntity.create(id, name)
         val saved = carsRepository.save(carEntity)
         return Car(saved.id, saved.name)
     }
 
-    @RequestMapping(path = arrayOf("/{id}"), method = arrayOf(PUT))
+    @RequestMapping(path = ["/{id}"], method = [PUT])
     fun changeCarName(@PathVariable("id") id: Int, @RequestBody car: Car): Car {
         if (car.id != id) {
             throw BadRequestException("Request id is not equal Car.id")
         }
 
-        val carEntity = carsRepository.findOne(id).orElseThrow { NotFoundException("Car with id=$id not found") }
+        val carEntity = carsRepository.findById(id).orElseThrow { NotFoundException("Car with id=$id not found") }
         carEntity.name = car.name
         val saved = carsRepository.save(carEntity)
 
         return Car(saved.id, saved.name)
     }
 
-    @RequestMapping(path = arrayOf("/{id}"), method = arrayOf(DELETE))
+    @RequestMapping(path = ["/{id}"], method = [DELETE])
     @ResponseStatus(NO_CONTENT)
     private fun deleteCar(@PathVariable("id") id: Int) {
-        carsRepository.delete(id)
+        carsRepository.deleteById(id)
     }
 }

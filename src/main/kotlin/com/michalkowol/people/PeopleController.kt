@@ -37,7 +37,7 @@ class PeopleController @Autowired constructor(private val peopleRepository: Peop
             throw IllegalStateException(id.toString())
         }
 
-        val person = peopleRepository.findOne(id).orElseThrow { NotFoundException("Person with id=$id was not found.") }
+        val person = peopleRepository.findById(id).orElseThrow { NotFoundException("Person with id=$id was not found.") }
         return person
     }
 

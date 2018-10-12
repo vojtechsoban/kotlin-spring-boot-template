@@ -7,7 +7,7 @@ import javax.persistence.Id
 class CarEntity {
 
     @Id
-    var id: Int = -1
+    var id: Int = 0
 
     lateinit var name: String
 

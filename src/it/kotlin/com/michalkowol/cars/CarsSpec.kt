@@ -62,7 +62,7 @@ class CarsSpec {
         }.launch()
         val audi = CarEntity.create(1, "Audi")
         val bmw = CarEntity.create(2, "VM")
-        carsRepository.save(listOf(audi, bmw))
+        carsRepository.saveAll(listOf(audi, bmw))
 
         // when
         val json = restTemplate.getForObject("/cars", String::class.java)
